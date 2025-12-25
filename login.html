@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BookHaven</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--primary-color:#3498db;--secondary-color:#2c3e50;--accent-color:#e74c3c;--light-color:#ecf0f1}
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+        body{background:linear-gradient(180deg, #f5f7fa 0%, #e9eef6 100%);color:#333;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+        .card{background:white;width:100%;max-width:420px;padding:2rem;border-radius:10px;box-shadow:0 10px 30px rgba(46,61,73,0.12)}
+        .brand{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+        .brand i{color:var(--primary-color);font-size:1.6rem}
+        .brand h1{font-size:1.25rem;color:var(--secondary-color)}
+        h2{margin-bottom:0.5rem;color:var(--secondary-color)}
+        p.lead{color:#666;margin-bottom:1.25rem}
+        .form-group{margin-bottom:1rem}
+        label{display:block;margin-bottom:.35rem;font-weight:600;color:#444}
+        input[type="email"],input[type="password"]{width:100%;padding:.85rem 1rem;border:1px solid #d7e0ea;border-radius:6px;font-size:1rem}
+        .actions{display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+        .btn{padding:.6rem 1rem;border-radius:6px;border:none;cursor:pointer}
+        .btn-primary{background:var(--primary-color);color:white}
+        .btn-link{background:transparent;color:var(--primary-color);border:1px solid transparent}
+        .small{font-size:.9rem;color:#666}
+        .error{color:var(--accent-color);font-size:.9rem;margin-top:.5rem}
+        .back-home{display:block;text-align:center;margin-top:1rem;color:#666;text-decoration:none}
+    </style>
+</head>
+<body>
+    <div class="card" role="main">
+        <div class="brand">
+            <i class="fas fa-book-open"></i>
+            <h1>BookHaven</h1>
+        </div>
+        <h2>Welcome back</h2>
+        <p class="lead">Sign in to your account to continue browsing and borrowing books.</p>
+
+        <form id="loginForm" novalidate>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input id="email" name="email" type="email" required placeholder="you@example.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" required placeholder="Enter your password">
+            </div>
+            <div id="errorMsg" class="error" aria-live="polite" style="display:none"></div>
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">Sign In</button>
+                <a href="#" id="forgot" class="btn btn-link">Forgot?</a>
+            </div>
+        </form>
+
+        <p class="small" style="margin-top:1rem">Don't have an account? <a href="#" id="toRegister">Create one</a></p>
+        <a class="back-home" href="project.html">← Back to Home</a>
+    </div>
+
+    <script>
+        
+        const form = document.getElementById('loginForm');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const errorMsg = document.getElementById('errorMsg');
+        const toRegister = document.getElementById('toRegister');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errorMsg.style.display = 'none';
+            const mail = email.value.trim();
+            const pass = password.value;
+            if (!mail) {
+                showError('Please enter your email.');
+                return;
+            }
+            if (!validateEmail(mail)) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+            if (!pass || pass.length < 6) {
+                showError('Please enter your password (6+ characters).');
+                return;
+            }
+
+            
+            window.location.href = 'project.html?login=success';
+        });
+
+        toRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+           
+            window.location.href = 'project.html#register';
+        });
+
+        function showError(msg){
+            errorMsg.textContent = msg;
+            errorMsg.style.display = 'block';
+        }
+
+        function validateEmail(u){
+            
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u);
+        }
+    </script>
+</body>
+</html>

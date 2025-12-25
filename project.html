@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookHaven - Digital Library System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+
+        
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 280px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1000;
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown:hover .dropdown-content,
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .top-book-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: var(--secondary-color);
+            transition: background-color 0.2s;
+        }
+
+        .top-book-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .top-book-cover {
+            width: 40px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .top-book-info {
+            flex: 1;
+        }
+
+        .top-book-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--secondary-color);
+        }
+
+        .top-book-meta {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .top-book-rating {
+            color: #f39c12;
+        }
+
+        .dropdown-header {
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            border-bottom: 1px solid #eee;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), 
+                        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+         .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Hide the legacy Book List table */
+        #bookListSection { display: none !important; }
+
+        .book-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-cover {
+            height: 300px;
+            background-color: #eee;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .book-card:hover .book-cover img {
+            transform: scale(1.05);
+        }
+
+        .book-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .book-info {
+            padding: 1.2rem;
+        }
+
+        .book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .book-author {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .book-category {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-pill {
+            background: var(--light-color);
+            color: var(--secondary-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid #e6e6e6;
+        }
+        .book-price {
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 1rem;
+            margin-right: 0.75rem;
+        }
+
+        .buy-btn { background: linear-gradient(90deg,var(--success-color),#27ae60); color: white; }
+        .action-btn.wishlisted { background: #ffebee; color: #c0392b; }
+        .book-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .book-rating {
+            color: #f39c12;
+            font-size: 0.9rem;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Ensure buttons align horizontally and vertically across components */
+        .btn, .action-btn, .buy-btn, .btn-primary, .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .buy-btn {
+            background: linear-gradient(90deg,var(--success-color),#27ae60);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            height: 34px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-content .btn, .modal-content .btn-primary, .modal-content .btn-outline {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .action-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .categories {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .category-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .books-grid {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .books-grid.loading {
+            opacity: 0.6;
+        }
+
+        .featured-section {
+            margin: 4rem 0;
+        }
+
+        .featured-book {
+            display: flex;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .featured-cover {
+            flex: 1;
+            min-height: 400px;
+            background-color: #eee;
+        }
+
+        .featured-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-details {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .featured-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .featured-author {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .featured-description {
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .featured-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Small variant for the featured book (compact) */
+        .featured-book.small {
+            gap: 0;
+            align-items: stretch;
+        }
+
+        .featured-book.small .featured-cover {
+            min-height: 220px; /* smaller cover height */
+            flex: 0 0 180px;   /* fixed narrow cover column */
+        }
+
+        .featured-book.small .featured-cover img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        .featured-book.small .featured-details {
+            padding: 1rem;
+        }
+
+        .featured-book.small .featured-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-book.small .featured-author {
+            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .featured-book.small .featured-description {
+            display: none; /* hide long description in compact mode */
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .borrow-btn {
+            align-self: flex-start;
+            padding: 0.8rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .borrow-btn:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary-color);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--accent-color);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .featured-book {
+                flex-direction: column;
+            }
+
+            .featured-cover {
+                min-height: 300px;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-container {
+                flex-direction: column;
+            }
+
+            .search-input {
+                border-radius: 4px;
+                margin-bottom: 0.5rem;
+            }
+
+            .search-btn {
+                border-radius: 4px;
+                padding: 0.8rem;
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-book-open"></i>
+                <h1>BookHaven</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" id="booksDropdown">Books</a>
+                        <div class="dropdown-content" id="topBooksDropdown">
+                            <div class="dropdown-header">
+                                <i class="fas fa-star"></i> Top Rated Books
+                            </div>
+                            <div id="topBooksList"><!-- Top books will be inserted here by JavaScript --></div>
+                        </div>
+                    </li>
+                    <li><a href="#categories">Categories</a></li>
+                    <li class="dropdown">
+                        <a href="#" id="aboutLink">About</a>
+                        <div class="dropdown-content" id="aboutDropdown">
+                            <div class="dropdown-header">
+                                <i class="fas fa-info-circle"></i> About Summary
+                            </div>
+                            <div style="padding:0.5rem 1rem; color:var(--secondary-color);">
+                                <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.35rem;"><strong id="navTotalBooks">0</strong><span style="color:#666;">Books</span></div>
+                                <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.35rem;"><strong id="navTotalCategories">0</strong><span style="color:#666;">Categories</span></div>
+                                <div style="display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem;"><strong id="navAvgRating">0</strong><span style="color:#666;">Avg Rating</span></div>
+                                <a href="#" id="aboutOpenFull" class="btn btn-outline" style="display:inline-block;">More details</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="#" id="purchasesLink" class="btn btn-outline">Purchases</a>
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Discover Your Next Favorite Book</h2>
+            <p>Browse our extensive collection of books from various genres and authors. Find your next adventure today.</p>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search for books, authors, or categories...">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="featured-section">
+            <h2 class="section-title">Featured Book</h2>
+            <div class="featured-book small">
+                <div class="featured-cover">
+                    <!-- Use Open Library's cover for the featured book (falls back to Unsplash if unavailable). -->
+                    <img id="featuredCoverImg" src="https://covers.openlibrary.org/b/isbn/9781250301697-L.jpg" alt="Featured Book Cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+                </div>
+                <div class="featured-details">
+                    <h3 class="featured-title">The Silent Patient</h3>
+                    <p class="featured-author">By Alex Michaelides</p>
+                    <p class="featured-description">
+                        The Silent Patient is a shocking psychological thriller of a woman's act of violence against her husband—and of the therapist obsessed with uncovering her motive...
+                    </p>
+                    <div class="featured-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-book"></i>
+                            <span>Fiction</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <span>4.5/5</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>2019</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span id="featuredPrice">$9.99</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <button class="borrow-btn">Borrow Now</button>
+                        <button class="btn buy-btn" id="featuredBuyBtn" title="Buy featured book" aria-label="Buy featured book">Buy</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">Browse Categories</h2>
+            <div class="categories" id="categoryButtons">
+                <button class="category-btn active" data-category="all">All Books</button>
+                <button class="category-btn" data-category="Fiction">Fiction</button>
+                <button class="category-btn" data-category="Non-Fiction">Non-Fiction</button>
+                <button class="category-btn" data-category="Science Fiction">Science Fiction</button>
+                <button class="category-btn" data-category="Fantasy">Fantasy</button>
+                <button class="category-btn" data-category="Mystery">Mystery</button>
+            </div>
+            <div class="category-info" style="margin: 1.5rem 0; display: none;">
+                <h3 class="category-title" style="font-size: 1.2rem; color: var(--secondary-color); margin-bottom: 0.5rem;"></h3>
+                <p class="category-count" style="color: #666;"></p>
+            </div>
+
+
+            <div class="books-grid" id="booksGrid">
+                <!-- Books will be loaded here via JavaScript -->
+            </div>
+
+            <!-- Book List Section -->
+            <section id="bookListSection" style="margin-top: 2rem;">
+                <h2 class="section-title">Book List</h2>
+                <div style="overflow-x:auto; background:white; padding:1rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.05);">
+                    <table id="bookListTable" style="width:100%; border-collapse:collapse;"></table>
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:0.75rem; border-bottom:1px solid #eee;">Title</th>
+                                <th style="text-align:left; padding:0.75rem; border-bottom:1px solid #eee;">Author</th>
+                                <th style="text-align:left; padding:0.75rem; border-bottom:1px solid #eee;">Category</th>
+                                <th style="text-align:right; padding:0.75rem; border-bottom:1px solid #eee;">Year</th>
+                                <th style="text-align:right; padding:0.75rem; border-bottom:1px solid #eee;">Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookListBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <!-- About Section -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-content" style="max-width: 800px">
+            <span class="close-modal" id="closeAboutModal">&times;</span>
+            <div class="about-content">
+                <h2 style="color: var(--secondary-color); font-size: 2rem; margin-bottom: 1.5rem">
+                    About Our Collection
+                </h2>
+                
+                <!-- Library Stats -->
+                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-books" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 2.5rem; margin: 0.5rem 0; color: var(--secondary-color);" id="totalBooks">0</h3>
+                        <p style="color: #666;">Total Books</p>
+                    </div>
+                    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-list" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 2.5rem; margin: 0.5rem 0; color: var(--secondary-color);" id="totalCategories">0</h3>
+                        <p style="color: #666;">Categories</p>
+                    </div>
+                    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-star" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 2.5rem; margin: 0.5rem 0; color: var(--secondary-color);" id="avgRating">0</h3>
+                        <p style="color: #666;">Avg. Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content" style="max-width: 800px">
+            <span class="close-modal" id="closeContactModal">&times;</span>
+            <div class="contact-content">
+                <h2 style="color: var(--secondary-color); font-size: 2rem; margin-bottom: 1.5rem">
+                    Contact Us
+                </h2>
+                
+                <!-- Contact Info Grid -->
+                <div class="contact-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="contact-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 0.5rem 0; color: var(--secondary-color);">Visit Us</h3>
+                        <p style="color: #666;">123 Library St<br>Bookville</p>
+                    </div>
+                    <div class="contact-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-phone" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 0.5rem 0; color: var(--secondary-color);">Call Us</h3>
+                        <p style="color: #666;">(123) 456-7890</p>
+                    </div>
+                    <div class="contact-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 0.5rem 0; color: var(--secondary-color);">Email Us</h3>
+                        <p style="color: #666;">info@bookhaven.com</p>
+                    </div>
+                    <div class="contact-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); text-align: center;">
+                        <i class="fas fa-clock" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 0.5rem;"></i>
+                        <h3 style="font-size: 1.2rem; margin: 0.5rem 0; color: var(--secondary-color);">Opening Hours</h3>
+                        <p style="color: #666;">Mon-Fri: 9am - 6pm</p>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="contact-form" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--secondary-color); font-size: 1.5rem; margin-bottom: 1.5rem;">Send us a Message</h3>
+                    <form id="contactForm" style="display: grid; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="name" style="display: block; margin-bottom: 0.5rem; color: var(--secondary-color);">Name:</label>
+                            <input type="text" id="name" name="name" required 
+                                   style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" style="display: block; margin-bottom: 0.5rem; color: var(--secondary-color);">Email:</label>
+                            <input type="email" id="email" name="email" required 
+                                   style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" style="display: block; margin-bottom: 0.5rem; color: var(--secondary-color);">Subject:</label>
+                            <input type="text" id="subject" name="subject" required 
+                                   style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="message" style="display: block; margin-bottom: 0.5rem; color: var(--secondary-color);">Message:</label>
+                            <textarea id="message" name="message" rows="4" required 
+                                    style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; resize: vertical;"></textarea>
+                        </div>
+                        <button type="submit" style="background: var(--primary-color); color: white; padding: 0.8rem 1.5rem; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; transition: background 0.3s;">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content" style="max-width: 480px;">
+            <span class="close-modal" id="closePaymentModal">&times;</span>
+            <div style="padding: 1rem 0;">
+                <h2 style="color: var(--secondary-color); margin-bottom: 0.5rem;">Complete Purchase</h2>
+                <p id="paymentBookTitle" style="margin-bottom: 0.75rem; color:#444;"></p>
+                <p id="paymentBookPrice" style="font-weight:700; margin-bottom:1rem; color:var(--secondary-color);"></p>
+                <form id="paymentForm" style="display:grid; gap:0.75rem;">
+                    <input type="text" id="payerName" placeholder="Full name" required style="padding:0.6rem;border:1px solid #ddd;border-radius:4px;">
+                    <input type="text" id="cardNumber" placeholder="Card number" required style="padding:0.6rem;border:1px solid #ddd;border-radius:4px;">
+                    <div style="display:flex; gap:0.5rem;"><input type="text" id="cardExp" placeholder="MM/YY" required style="flex:1;padding:0.6rem;border:1px solid #ddd;border-radius:4px;"><input type="text" id="cardCvv" placeholder="CVV" required style="width:90px;padding:0.6rem;border:1px solid #ddd;border-radius:4px;"></div>
+                    <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:0.25rem;">
+                        <button type="button" id="paymentCancelBtn" class="btn btn-outline" style="padding:0.55rem 0.9rem;">Cancel</button>
+                        <button type="submit" class="btn-primary" style="padding:0.55rem 0.9rem;">Pay Now</button>
+                    </div>
+                    <div id="paymentFeedback" style="display:none; margin-top:0.75rem; font-size:0.95rem;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Purchases Modal -->
+    <div class="modal" id="purchasesModal">
+        <div class="modal-content" style="max-width: 720px;">
+            <span class="close-modal" id="closePurchasesModal">&times;</span>
+            <div style="padding: 1rem 0;">
+                <h2 style="color: var(--secondary-color); margin-bottom: 0.5rem;">My Purchases</h2>
+                <div id="purchasesList" style="display:grid; gap:0.75rem; margin-bottom:1rem;"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+                    <div style="color:#666">Total purchases:</div>
+                    <div id="purchasesTotal" style="font-weight:700; color:var(--secondary-color);">$0.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+                <!-- Top Rated Section -->
+                <div class="top-rated" style="margin-bottom: 2rem;">
+                    <h3 style="color: var(--secondary-color); font-size: 1.5rem; margin-bottom: 1rem;">Highest Rated Books</h3>
+                    <p id="sumTopRatings" style="color: #444; margin-top: -0.5rem; margin-bottom: 0.75rem; font-weight: 600;"></p>
+                    <div id="topRatedBooks" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <!-- Top rated books will be inserted here via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Mission Statement -->
+                <div class="mission" style="background: #f8f9fa; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+                    <h3 style="color: var(--secondary-color); font-size: 1.5rem; margin-bottom: 1rem;">Our Mission</h3>
+                    <p style="color: #444; line-height: 1.6;">
+                        At BookHaven, we believe in the transformative power of reading. Our carefully curated collection spans multiple genres and includes both timeless classics and contemporary masterpieces. We strive to provide our readers with high-quality literature that educates, entertains, and inspires.
+                    </p>
+                    <p style="color: #444; line-height: 1.6; margin-top: 1rem;">
+                        Whether you're seeking knowledge, adventure, or escape, our diverse collection has something for every reader. We continuously update our library with new releases and reader recommendations to ensure our collection remains fresh and relevant.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>BookHaven</h3>
+                <p>Your gateway to a world of knowledge and imagination. Explore our vast collection of books from around the globe.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Books</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">New Arrivals</a></li>
+                    <li><a href="#">Bestsellers</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Help</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Borrowing Guide</a></li>
+                    <li><a href="#">Membership</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Library St, Bookville</li>
+                    <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                    <li><i class="fas fa-envelope"></i> info@bookhaven.com</li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 9am - 6pm</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 BookHaven Library System. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeLoginModal">&times;</span>
+            <h3 class="modal-title">Login to Your Account</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="submit-btn">Login</button>
+            </form>
+            <p style="margin-top: 1rem;">Don't have an account? <a href="#" id="switchToRegister" style="color: var(--primary-color);">Register here</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeRegisterModal">&times;</span>
+            <h3 class="modal-title">Create an Account</h3>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" class="form-control" required>
+                </div>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+            <p style="margin-top: 1rem;">Already have an account? <a href="#" id="switchToLogin" style="color: var(--primary-color);">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Sample book data (using Open Library covers by ISBN where available)
+        // If a cover is not available via Open Library, the img onerror fallback will show a placeholder image.
+        const books = [
+            {
+                id: 1,
+                title: "The Silent Patient",
+                author: "Alex Michaelides",
+                isbn: "9781250301697",
+                cover: "https://covers.openlibrary.org/b/isbn/9781250301697-L.jpg",
+                category: "Fiction",
+                rating: 4.5,
+                price: 15.99,
+                year: 2019,
+                available: true,
+                reviews: [
+                    { reviewer: "Emma R.", rating: 5, text: "A gripping psychological thriller with a jaw-dropping twist. The pacing and character work kept me hooked until the last page." },
+                    { reviewer: "Sam K.", rating: 4, text: "Compelling and tense, though some plot beats felt slightly predictable. Still a fantastic read for thriller lovers." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Atomic Habits",
+                author: "James Clear",
+                isbn: "9780735211292",
+                cover: "https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg",
+                category: "Non-Fiction",
+                rating: 4.7,
+                price: 16.99,
+                year: 2018,
+                available: true,
+                reviews: [
+                    { reviewer: "Lena M.", rating: 5, text: "Practical, actionable advice that actually works. Short habits make a big difference when applied consistently." },
+                    { reviewer: "Carlos P.", rating: 4, text: "Well-written and full of useful frameworks. Some repetition, but overall highly valuable." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Dune",
+                author: "Frank Herbert",
+                isbn: "9780441013593",
+                cover: "https://covers.openlibrary.org/b/isbn/9780441013593-L.jpg",
+                category: "Science Fiction",
+                rating: 4.8,
+                price: 14.99,
+                year: 1965,
+                available: false,
+                reviews: [
+                    { reviewer: "A. Reader", rating: 5, text: "Epic world-building and political intrigue. A seminal sci-fi novel that rewards careful reading." },
+                    { reviewer: "J. Fan", rating: 5, text: "Complex, immersive, and brilliant — Dune remains one of the greatest science fiction works." }
+                ]
+            },
+            {
+                id: 4,
+                title: "The Hobbit",
+                author: "J.R.R. Tolkien",
+                isbn: "9780547928227",
+                cover: "https://covers.openlibrary.org/b/isbn/9780547928227-L.jpg",
+                category: "Fantasy",
+                rating: 4.6,
+                price: 12.99,
+                year: 1937,
+                available: true,
+                reviews: [
+                    { reviewer: "Maya T.", rating: 5, text: "A timeless adventure full of warmth and wonder. Perfect for introducing new readers to Tolkien's world." },
+                    { reviewer: "Owen L.", rating: 4, text: "Charming and brisk, with memorable characters and a joyful spirit." }
+                ]
+            },
+            {
+                id: 5,
+                title: "Project Hail Mary",
+                author: "Andy Weir",
+                isbn: "9780593135204",
+                cover: "https://covers.openlibrary.org/b/isbn/9780593135204-L.jpg",
+                category: "Science Fiction",
+                rating: 4.9,
+                price: 17.99,
+                year: 2021,
+                available: true,
+                reviews: [
+                    { reviewer: "Chris M.", rating: 5, text: "Brilliant sci-fi that combines hard science with heart. The character dynamics are unforgettable." },
+                    { reviewer: "Sarah L.", rating: 5, text: "Even better than The Martian. A perfect blend of science, humor, and emotion." }
+                ]
+            },
+            {
+                id: 6,
+                title: "The Seven Husbands of Evelyn Hugo",
+                author: "Taylor Jenkins Reid",
+                isbn: "9781501161933",
+                cover: "https://covers.openlibrary.org/b/isbn/9781501161933-L.jpg",
+                category: "Fiction",
+                rating: 4.7,
+                price: 13.99,
+                year: 2017,
+                available: true,
+                reviews: [
+                    { reviewer: "Rachel K.", rating: 5, text: "Absolutely captivating from start to finish. A masterfully crafted story about fame, love, and identity." },
+                    { reviewer: "David P.", rating: 4, text: "Compelling and glamorous, with unexpected depth and emotional resonance." }
+                ]
+            },
+            {
+                id: 7,
+                title: "Educated",
+                author: "Tara Westover",
+                isbn: "9780399590504",
+                cover: "https://covers.openlibrary.org/b/isbn/9780399590504-L.jpg",
+                category: "Non-Fiction",
+                rating: 4.8,
+                price: 14.99,
+                year: 2018,
+                available: false,
+                reviews: [
+                    { reviewer: "Laura B.", rating: 5, text: "A remarkable memoir that showcases the power of education and self-determination." },
+                    { reviewer: "Michael R.", rating: 5, text: "Beautifully written and deeply moving. A testament to the human spirit." }
+                ]
+            },
+            {
+                id: 8,
+                title: "The Midnight Library",
+                author: "Matt Haig",
+                isbn: "9780525559474",
+                cover: "https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg",
+                category: "Fiction",
+                rating: 4.6,
+                price: 13.99,
+                year: 2020,
+                available: true,
+                reviews: [
+                    { reviewer: "Nina S.", rating: 5, text: "A life-affirming novel about choices, regrets, and infinite possibilities. Deeply touching." },
+                    { reviewer: "Tom W.", rating: 4, text: "Thought-provoking and hopeful. A unique take on the what-if scenario." }
+                ]
+            },
+            {
+                id: 9,
+                title: "Klara and the Sun",
+                author: "Kazuo Ishiguro",
+                isbn: "9780571364879",
+                cover: "https://covers.openlibrary.org/b/isbn/9780571364879-L.jpg",
+                category: "Science Fiction",
+                rating: 4.5,
+                price: 15.99,
+                year: 2021,
+                available: true,
+                reviews: [
+                    { reviewer: "Helen P.", rating: 5, text: "A masterful exploration of consciousness and love through an artificial friend's eyes." },
+                    { reviewer: "James M.", rating: 4, text: "Quietly profound and deeply moving. Ishiguro at his contemplative best." }
+                ]
+            },
+            {
+                id: 10,
+                title: "The Thursday Murder Club",
+                author: "Richard Osman",
+                isbn: "9780241425442",
+                cover: "https://covers.openlibrary.org/b/isbn/9780241425442-L.jpg",
+                category: "Mystery",
+                rating: 4.7,
+                price: 12.99,
+                year: 2020,
+                available: true,
+                reviews: [
+                    { reviewer: "Patricia L.", rating: 5, text: "Charming, clever, and thoroughly entertaining. A fresh take on the murder mystery genre." },
+                    { reviewer: "Robert C.", rating: 4, text: "Delightful characters and intricate plotting. Pure entertainment from start to finish." }
+                ]
+},
+            {
+                id: 11,
+                title: "The Great Gatsby",
+                author: "F. Scott Fitzgerald",
+                isbn: "9780743273565",
+                cover: "https://covers.openlibrary.org/b/isbn/9780743273565-L.jpg",
+                category: "Fiction",
+                rating: 4.3,
+                price: 11.99,
+                year: 1925,
+                available: true,
+                reviews: [
+                    { reviewer: "C. Miller", rating: 5, text: "A concise, haunting exploration of the American dream. Timeless and beautifully written." }
+                ]
+            },
+            {
+                id: 12,
+                title: "Neuromancer",
+                author: "William Gibson",
+                isbn: "9780441569595",
+                cover: "https://covers.openlibrary.org/b/isbn/9780441569595-L.jpg",
+                category: "Science Fiction",
+                rating: 4.1,
+                price: 13.99,
+                year: 1984,
+                available: true,
+                reviews: [
+                    { reviewer: "R. Smith", rating: 4, text: "A foundational cyberpunk novel with vivid world-building and fast pacing." }
+                ]
+            },
+            {
+                id: 13,
+                title: "The Name of the Wind",
+                author: "Patrick Rothfuss",
+                isbn: "9780756404741",
+                cover: "https://covers.openlibrary.org/b/isbn/9780756404741-L.jpg",
+                category: "Fantasy",
+                rating: 4.7,
+                price: 16.99,
+                year: 2007,
+                available: true,
+                reviews: [
+                    { reviewer: "A. Reader", rating: 5, text: "Lyrical, immersive fantasy with a compelling protagonist and deep lore." }
+                ]
+            }
+        ];
+
+        // Store completed purchases (client-side simulated) — persisted to localStorage
+        let purchases = JSON.parse(localStorage.getItem('bookhaven_purchases') || '[]');
+        function savePurchases() { localStorage.setItem('bookhaven_purchases', JSON.stringify(purchases)); }
+
+      
+        // Populate top books dropdown
+        function renderTopBooks() {
+            const list = document.getElementById('topBooksList');
+            if (!list) return;
+
+            // Sort books by rating (descending) and take top 5
+            const topBooks = [...books]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 5);
+
+            const content = topBooks.map(book => `
+                <a href="#book-${book.id}" class="top-book-item">
+                    <img src="${book.cover}" 
+                         alt="${escapeHtml(book.title)}" 
+                         class="top-book-cover"
+                         onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+                    <div class="top-book-info">
+                        <div class="top-book-title">${escapeHtml(book.title)}</div>
+                        <div class="top-book-meta">
+                            <span class="top-book-rating">
+                                <i class="fas fa-star"></i> ${book.rating}
+                            </span>
+                            <span>${book.category}</span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+
+            // Replace content (clears previous entries when re-run)
+            list.innerHTML = content;
+
+            // update nav stats (count of books)
+            const navTotal = document.getElementById('navTotalBooks');
+            if (navTotal) navTotal.textContent = books.length;
+        }
+
+        // Handle dropdown on mobile (touch devices)
+        document.getElementById('booksDropdown')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdown = document.getElementById('topBooksDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.matches('#booksDropdown')) {
+                const dropdowns = document.getElementsByClassName('dropdown-content');
+                Array.from(dropdowns).forEach(dropdown => {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                });
+            }
+        });
+
+        // Initialize top books
+        renderTopBooks();
+
+        const booksGrid = document.getElementById('booksGrid');
+        const categoryButtons = document.getElementById('categoryButtons');
+        const categoryInfo = document.querySelector('.category-info');
+        const categoryTitle = document.querySelector('.category-title');
+        const categoryCount = document.querySelector('.category-count');
+        let currentCategory = 'all';
+
+        // Category filtering functionality
+        function filterBooksByCategory(category) {
+            currentCategory = category;
+            let filteredBooks = books;
+            
+            if (category !== 'all') {
+                filteredBooks = books.filter(book => book.category === category);
+            }
+
+            // Update category info
+            categoryInfo.style.display = 'block';
+            categoryTitle.textContent = category === 'all' ? 'All Books' : category;
+            categoryCount.textContent = `${filteredBooks.length} book${filteredBooks.length !== 1 ? 's' : ''} available`;
+
+            // Render filtered books
+            renderBooks(filteredBooks);
+
+            // Update active button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+        }
+
+        // Add click handlers to category buttons
+        categoryButtons.addEventListener('click', (e) => {
+            const btn = e.target.closest('.category-btn');
+            if (btn) {
+                const category = btn.dataset.category;
+                filterBooksByCategory(category);
+            }
+        });
+
+        function renderBooks(list) {
+            if (!booksGrid) return;
+            booksGrid.innerHTML = '';
+            list.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.dataset.id = book.id;
+                card.id = `book-${book.id}`;
+               
+                const reviewExcerpt = (book.reviews && book.reviews.length) ? book.reviews[0].text.slice(0, 120) + (book.reviews[0].text.length > 120 ? '…' : '') : ''; 
+
+                card.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover}" alt="${book.title} cover" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+                        ${book.available ? '' : '<div class="book-badge">Checked Out</div>'}
+                    </div>
+                    <div class="book-info">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">By ${book.author}</div>
+                        <div class="book-category"><span class="category-pill">${escapeHtml(book.category)}</span></div>
+                        ${ reviewExcerpt ? `<div class="book-review" style="margin-top:.6rem;color:#555;font-size:.95rem">${escapeHtml(reviewExcerpt)}</div>` : '' }
+                        <div class="book-meta">
+                            <div class="book-rating"><i class="fas fa-star"></i> ${book.rating}</div>
+                            <div class="book-actions">
+                                <button class="action-btn" data-action="view" data-id="${book.id}" title="View" aria-label="View details"><i class="fas fa-eye"></i></button>
+                                <button class="action-btn" data-action="wishlist" data-id="${book.id}" title="Wishlist" aria-label="Add to wishlist"><i class="fas fa-heart"></i></button>
+                                <button class="action-btn" data-action="borrow" data-id="${book.id}" title="Borrow" aria-label="Borrow book"><i class="fas fa-book"></i></button>
+                                <button class="btn buy-btn" data-id="${book.id}" title="Buy" aria-label="Buy book" style="padding:0.35rem 0.6rem; border-radius:4px; margin-left:0.5rem;">Buy</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                booksGrid.appendChild(card);
+            });
+
+        }
+
+       
+        renderBooks(books);
+
+
+        if (typeof updateAboutStats === 'function') updateAboutStats();
+
+       
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, function (s) {
+                return ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                })[s];
+            });
+        }
+
+        // Luhn checksum for basic card validation
+        function luhnCheck(cc) {
+            if (!/^[0-9]{12,19}$/.test(cc)) return false;
+            let sum = 0, alt = false;
+            for (let i = cc.length - 1; i >= 0; i--) {
+                let n = parseInt(cc.charAt(i), 10);
+                if (alt) { n *= 2; if (n > 9) n -= 9; }
+                sum += n; alt = !alt;
+            }
+            return (sum % 10) === 0;
+        }
+
+        // About modal functionality
+        const aboutModal = document.getElementById('aboutModal');
+        const aboutLink = document.getElementById('aboutLink');
+        const closeAboutModal = document.getElementById('closeAboutModal');
+
+        function updateAboutStats() {
+            // Calculate statistics
+            const totalBooks = books.length;
+            const categories = [...new Set(books.map(book => book.category))];
+            const avgRating = (books.reduce((sum, book) => sum + book.rating, 0) / books.length).toFixed(1);
+
+            // Update stats display
+            document.getElementById('totalBooks').textContent = totalBooks;
+            document.getElementById('totalCategories').textContent = categories.length;
+            document.getElementById('avgRating').textContent = avgRating;
+            // Also update the nav dropdown summary if present
+            const navTotal = document.getElementById('navTotalBooks');
+            const navCats = document.getElementById('navTotalCategories');
+            const navAvg = document.getElementById('navAvgRating');
+            if (navTotal) navTotal.textContent = totalBooks;
+            if (navCats) navCats.textContent = categories.length;
+            if (navAvg) navAvg.textContent = avgRating;
+
+
+
+
+
+            // Show top rated books
+            const topRated = [...books]
+                .sort((a, b) => b.rating - a.rating)
+                .slice(0, 3)
+                .map(book => `
+                    <div class="top-book" style="display: flex; gap: 1rem; background: white; padding: 1rem; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                        <img src="${book.cover}" 
+                             alt="${escapeHtml(book.title)}" 
+                             style="width: 60px; height: 90px; object-fit: cover; border-radius: 4px;"
+                             onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+                        <div>
+                            <h4 style="color: var(--secondary-color); margin-bottom: 0.25rem;">${escapeHtml(book.title)}</h4>
+                            <p style="color: #666; font-size: 0.9rem;">by ${escapeHtml(book.author)}</p>
+                            <p style="color: #f39c12; margin-top: 0.25rem;">
+                                <i class="fas fa-star"></i> ${book.rating}
+                            </p>
+                        </div>
+                    </div>
+                `).join('');
+            document.getElementById('topRatedBooks').innerHTML = topRated;
+            // also update a small sum for the top-rated group if the element exists
+            const topArr = [...books].sort((a, b) => b.rating - a.rating).slice(0, 3);
+            const sumTop = topArr.reduce((s, b) => s + (b.rating || 0), 0).toFixed(1);
+            const sumEl = document.getElementById('sumTopRatings');
+            if (sumEl) sumEl.textContent = `Top 3 rating sum: ${sumTop}`;
+
+            if (typeof renderTopBooks === 'function') renderTopBooks();
+        }
+
+        // Render the book list table
+        function renderBookList() {
+            const tbody = document.getElementById('bookListBody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            books.forEach(b => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:0.6rem; border-bottom:1px solid #f1f1f1;">${escapeHtml(b.title)}</td>
+                    <td style="padding:0.6rem; border-bottom:1px solid #f1f1f1;">${escapeHtml(b.author)}</td>
+                    <td style="padding:0.6rem; border-bottom:1px solid #f1f1f1;">${escapeHtml(b.category)}</td>
+                    <td style="padding:0.6rem; border-bottom:1px solid #f1f1f1; text-align:right;">${b.year || ''}</td>
+                    <td style="padding:0.6rem; border-bottom:1px solid #f1f1f1; text-align:right;">${b.rating}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+
+        // About modal event handlers
+        aboutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            updateAboutStats();
+            aboutModal.style.display = 'flex';
+        });
+
+        // 'More details' link in the nav dropdown should also open the about modal
+        const aboutOpenFull = document.getElementById('aboutOpenFull');
+        if (aboutOpenFull) {
+            aboutOpenFull.addEventListener('click', (e) => {
+                e.preventDefault();
+                updateAboutStats();
+                aboutModal.style.display = 'flex';
+                // also hide the dropdown if visible
+                const aboutDropdown = document.getElementById('aboutDropdown');
+                if (aboutDropdown) aboutDropdown.classList.remove('show');
+            });
+        }
+
+        closeAboutModal.addEventListener('click', () => {
+            aboutModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === aboutModal) {
+                aboutModal.style.display = 'none';
+            }
+        });
+
+        // Payment modal handlers
+        const paymentModal = document.getElementById('paymentModal');
+        const closePaymentModal = document.getElementById('closePaymentModal');
+        const paymentForm = document.getElementById('paymentForm');
+        const paymentCancelBtn = document.getElementById('paymentCancelBtn');
+        let currentPurchaseBookId = null;
+        let paymentProcessingTimeout = null;
+
+        // Delegated handler for Buy buttons inside book grid
+        booksGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.buy-btn');
+            if (!btn) return;
+            const id = Number(btn.dataset.id);
+            const book = books.find(b => b.id === id);
+            if (!book) return;
+            // populate modal
+            currentPurchaseBookId = id;
+            document.getElementById('paymentBookTitle').textContent = book.title + ' — by ' + book.author;
+            document.getElementById('paymentBookPrice').textContent = '$' + ((book.price || 9.99).toFixed(2));
+            const _pf = document.getElementById('paymentFeedback'); if (_pf) { _pf.style.display = 'none'; _pf.textContent = ''; }
+            paymentModal.style.display = 'flex';
+        });
+
+        closePaymentModal.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        }
+
+        ,function closePaymentModalSafe() {
+            paymentModal.style.display = 'none';
+        }
+
+        ,closePaymentModal.addEventListener('click', closePaymentModalSafe));
+        if (paymentCancelBtn) paymentCancelBtn.addEventListener('click', closePaymentModalSafe);
+
+        window.addEventListener('click', (e) => {
+            if (e.target === paymentModal) paymentModal.style.display = 'none';
+        });
+
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentPurchaseBookId) return alert('No book selected.');
+            const book = books.find(b => b.id === currentPurchaseBookId);
+            if (!book) return alert('Book not found.');
+
+            const name = (document.getElementById('payerName')?.value || '').trim();
+            const cardNumber = (document.getElementById('cardNumber')?.value || '').replace(/\s+/g, '');
+            const cardExp = (document.getElementById('cardExp')?.value || '').trim();
+            const cardCvv = (document.getElementById('cardCvv')?.value || '').trim();
+
+            if (!name) return alert('Please enter your full name.');
+            if (!/^[0-9]{12,19}$/.test(cardNumber) || !luhnCheck(cardNumber)) return alert('Please enter a valid card number.');
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(cardExp)) return alert('Expiry must be in MM/YY format.');
+            const [mm, yy] = cardExp.split('/').map(s => parseInt(s, 10));
+            const expDate = new Date(2000 + yy, mm - 1, 1);
+            const lastDay = new Date(expDate.getFullYear(), expDate.getMonth() + 1, 0);
+            if (lastDay < new Date()) return alert('Card is expired.');
+            if (!/^\d{3,4}$/.test(cardCvv)) return alert('Invalid CVV.');
+
+            const submitBtn = paymentForm.querySelector('button[type="submit"]');
+            const feedback = document.getElementById('paymentFeedback');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            feedback.style.display = 'block';
+            feedback.textContent = 'Processing payment — please wait...';
+
+            const payload = { id: book.id, title: book.title, price: +(book.price || 9.99).toFixed(2) };
+
+            // Try server-based Checkout; fallback to simulated purchase if unavailable
+            let redirected = false;
+            try {
+                const res = await fetch('http://localhost:4242/create-checkout-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.url) {
+                        paymentModal.style.display = 'none';
+                        // redirect to Stripe Checkout
+                        window.location = data.url;
+                        redirected = true;
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Payment server not reachable, falling back to simulated payment.', err);
+            }
+
+            if (!redirected) {
+                await new Promise(r => setTimeout(r, 1200));
+
+                const last4 = cardNumber.slice(-4);
+                const txId = 'TX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,8).toUpperCase();
+                const price = +(book.price || 9.99);
+                book.available = false;
+                const purchase = { id: book.id, title: book.title, author: book.author, price: price, date: new Date().toISOString(), session: null, txId, last4, payer: name, status: 'paid' };
+                purchases.push(purchase);
+                savePurchases();
+                renderBooks(books.filter(b => currentCategory === 'all' ? true : b.category === currentCategory));
+
+                feedback.innerHTML = `<div style="color:var(--success-color); font-weight:700;">Payment successful — Transaction ${txId}</div>`;
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Pay Now';
+                paymentForm.reset();
+                paymentModal.style.display = 'none';
+                currentPurchaseBookId = null;
+
+                // open receipt modal for the completed purchase
+                setTimeout(() => openReceiptModal(purchase), 250);
+            }
+        });
+
+        // Wishlist and borrowed storage (client-side)
+        const wishlist = JSON.parse(localStorage.getItem('bookhaven_wishlist') || '[]');
+        const borrowed = JSON.parse(localStorage.getItem('bookhaven_borrowed') || '[]');
+
+        function saveWishlist() { localStorage.setItem('bookhaven_wishlist', JSON.stringify(wishlist)); }
+        function saveBorrowed() { localStorage.setItem('bookhaven_borrowed', JSON.stringify(borrowed)); }
+
+        // View (detail) modal creation
+        let detailModal = document.getElementById('detailModal');
+        if (!detailModal) {
+            detailModal = document.createElement('div');
+            detailModal.className = 'modal';
+            detailModal.id = 'detailModal';
+            detailModal.innerHTML = `
+                <div class="modal-content" style="max-width:720px;">
+                    <span class="close-modal" id="closeDetailModal">&times;</span>
+                    <div id="detailBody"></div>
+                </div>
+            `;
+            document.body.appendChild(detailModal);
+        }
+
+        function openDetailModal(book) {
+            const body = document.getElementById('detailBody');
+            body.innerHTML = `
+                <div style="display:flex; gap:1rem;">
+                    <img src="${book.cover}" style="width:140px; height:210px; object-fit:cover; border-radius:6px;" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';">
+                    <div>
+                        <h3 style="margin:0 0 .4rem; color:var(--secondary-color)">${escapeHtml(book.title)}</h3>
+                        <div style="color:#666; margin-bottom:.5rem;">by ${escapeHtml(book.author)}</div>
+                        <div style="margin-bottom:.5rem;"><strong>Category:</strong> ${escapeHtml(book.category)}</div>
+                        <div style="margin-bottom:.5rem;"><strong>Price:</strong> $${(book.price||9.99).toFixed(2)}</div>
+                        <div style="margin-bottom:.8rem; color:#444">${escapeHtml(book.reviews && book.reviews[0] ? book.reviews[0].text.slice(0,300) : '')}${(book.reviews && book.reviews[0] && book.reviews[0].text.length>300)?'…':''}</div>
+                        <div style="display:flex; gap:.5rem;">
+                            <button class="btn-primary" id="detailBuyBtn">Buy</button>
+                            <button class="btn btn-outline" id="detailBorrowBtn">Borrow</button>
+                            <button class="btn btn-outline" id="detailWishlistBtn">Wishlist</button>
+                        </div>
+                        <div style="margin-top:0.5rem;">
+                            <h4 style="margin:0 0 .5rem; color:var(--secondary-color);">Reviews</h4>
+                            <div id="detailReviews" style="display:grid; gap:0.5rem; max-height:220px; overflow:auto; padding-right:0.5rem;">
+                                <!-- reviews injected here -->
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            // wire buttons
+            document.getElementById('detailBuyBtn').onclick = () => {
+                // open payment modal for this book
+                currentPurchaseBookId = book.id;
+                document.getElementById('paymentBookTitle').textContent = book.title + ' — by ' + book.author;
+                document.getElementById('paymentBookPrice').textContent = '$' + ((book.price || 9.99).toFixed(2));
+                const _pf = document.getElementById('paymentFeedback'); if (_pf) { _pf.style.display = 'none'; _pf.textContent = ''; }
+                paymentModal.style.display = 'flex';
+                detailModal.style.display = 'none';
+            };
+            document.getElementById('detailBorrowBtn').onclick = () => { borrowBook(book.id); detailModal.style.display='none'; };
+            document.getElementById('detailWishlistBtn').onclick = () => { toggleWishlist(book.id); renderBooks(books); };
+            // render reviews list
+            const reviewsEl = document.getElementById('detailReviews');
+            if (reviewsEl) {
+                const revs = (book.reviews || []).map(r => `
+                    <div style="background:#fafafa;border:1px solid #eee;padding:0.6rem;border-radius:6px;">
+                        <div style="font-weight:600;color:var(--secondary-color);">${escapeHtml(r.reviewer)} <span style=\"color:#f39c12;font-weight:700;margin-left:0.5rem;\">${r.rating} <i class=\\"fas fa-star\\" style=\\"font-size:0.8rem;\\"></i></span></div>
+                        <div style="color:#444;margin-top:0.25rem;font-size:0.95rem;">${escapeHtml(r.text)}</div>
+                    </div>
+                `).join('');
+                reviewsEl.innerHTML = revs || '<div style="color:#666;">No reviews yet.</div>';
+            }
+            detailModal.style.display = 'flex';
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target.id === 'closeDetailModal' || e.target.id === 'detailModal') {
+                detailModal.style.display = 'none';
+            }
+        });
+
+        // Borrow function (used by card and featured)
+        function borrowBook(id) {
+            const book = books.find(b => b.id === id);
+            if (!book) return alert('Book not found.');
+            if (!book.available) return alert('Sorry, this book is currently unavailable.');
+            book.available = false;
+            borrowed.push({ id: book.id, title: book.title, date: new Date().toISOString() });
+            saveBorrowed();
+            renderBooks(books.filter(b => currentCategory === 'all' ? true : b.category === currentCategory));
+            alert('You have borrowed "' + book.title + '". Please return it by the due date.');
+        }
+
+        // Wishlist toggle
+        function toggleWishlist(id) {
+            const idx = wishlist.indexOf(id);
+            if (idx === -1) { wishlist.push(id); } else { wishlist.splice(idx,1); }
+            saveWishlist();
+            // visual update will occur on re-render
+        }
+
+        // Wire card-level action buttons (View, Wishlist, Borrow)
+        document.addEventListener('click', function(e) {
+            const viewBtn = e.target.closest && e.target.closest('.action-btn[title="View"]');
+            if (viewBtn) {
+                // find the book container to get id - we can use review-btn sibling or search by title text
+                const card = viewBtn.closest('.book-card');
+                if (!card) return;
+                const titleEl = card.querySelector('.book-title');
+                const title = titleEl ? titleEl.textContent.trim() : null;
+                const book = books.find(b => b.title === title);
+                if (book) openDetailModal(book);
+            }
+
+            const wishBtn = e.target.closest && e.target.closest('.action-btn[title="Wishlist"]');
+            if (wishBtn) {
+                // find associated book id via nearby review-btn or data attributes
+                const card = wishBtn.closest('.book-card');
+                if (!card) return;
+                const title = card.querySelector('.book-title')?.textContent.trim();
+                const book = books.find(b => b.title === title);
+                if (book) { toggleWishlist(book.id); renderBooks(books); }
+            }
+
+            const borrowBtn = e.target.closest && e.target.closest('.action-btn[title="Borrow"]');
+            if (borrowBtn) {
+                const card = borrowBtn.closest('.book-card');
+                if (!card) return;
+                const title = card.querySelector('.book-title')?.textContent.trim();
+                const book = books.find(b => b.title === title);
+                if (book) borrowBook(book.id);
+            }
+        });
+
+        // Wire featured borrow button to first book (or selected featured)
+        document.querySelectorAll('.featured-section .borrow-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const f = books[0];
+                if (f) borrowBook(f.id);
+            });
+        });
+
+        // Search handling
+        const searchInput = document.querySelector('.search-input');
+        const searchBtn = document.querySelector('.search-btn');
+        function runSearch() {
+            const q = (searchInput?.value || '').toLowerCase().trim();
+            if (!q) { renderBooks(books); return; }
+            const filtered = books.filter(b => (b.title + ' ' + b.author + ' ' + b.category).toLowerCase().includes(q));
+            renderBooks(filtered);
+        }
+        searchBtn?.addEventListener('click', (e) => { e.preventDefault(); runSearch(); });
+        searchInput?.addEventListener('keyup', (e) => { if (e.key === 'Enter') runSearch(); });
+
+        // Set featured price dynamically (use first book price or default)
+        const featuredPriceEl = document.getElementById('featuredPrice');
+        const featuredCategoryEl = document.getElementById('featuredCategory');
+        const featuredRatingEl = document.getElementById('featuredRating');
+        if (featuredPriceEl && books && books.length) {
+            const f = books[0];
+            featuredPriceEl.textContent = '$' + ((f.price || 9.99).toFixed(2));
+            if (featuredCategoryEl) featuredCategoryEl.textContent = f.category || featuredCategoryEl.textContent;
+            if (featuredRatingEl) featuredRatingEl.textContent = (f.rating ? f.rating + '/5' : featuredRatingEl.textContent);
+
+            // wire featured Buy button to open payment modal
+            const featuredBuyBtn = document.getElementById('featuredBuyBtn');
+            if (featuredBuyBtn) {
+                featuredBuyBtn.dataset.id = String(f.id);
+                featuredBuyBtn.addEventListener('click', () => {
+                    currentPurchaseBookId = f.id;
+                    document.getElementById('paymentBookTitle').textContent = f.title + ' — by ' + f.author;
+                    document.getElementById('paymentBookPrice').textContent = '$' + ((f.price || 9.99).toFixed(2));
+                    const _pf = document.getElementById('paymentFeedback'); if (_pf) { _pf.style.display = 'none'; _pf.textContent = ''; }
+                    paymentModal.style.display = 'flex';
+                });
+            }
+        }
+
+            // Contact modal functionality
+            const contactModal = document.getElementById('contactModal');
+            const contactLinks = document.querySelectorAll('a[href="#"]').forEach(link => {
+                if (link.textContent.toLowerCase().includes('contact')) {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        contactModal.style.display = 'flex';
+                    });
+                }
+            });
+        
+            const closeContactModal = document.getElementById('closeContactModal');
+            closeContactModal.addEventListener('click', () => {
+                contactModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (e) => {
+                if (e.target === contactModal) {
+                    contactModal.style.display = 'none';
+                }
+            });
+
+            // Contact form handling
+            document.getElementById('contactForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+            
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value
+                };
+
+                // Here you would typically send this data to a server
+                // For now, we'll just show a success message
+                alert('Thank you for your message! We will get back to you soon.');
+                e.target.reset();
+                contactModal.style.display = 'none';
+            });
+
+        // Purchases modal handlers and rendering
+        const purchasesModal = document.getElementById('purchasesModal');
+        const purchasesLinkEl = document.getElementById('purchasesLink');
+        const closePurchasesModal = document.getElementById('closePurchasesModal');
+
+        function renderPurchases() {
+            const list = document.getElementById('purchasesList');
+            const totalEl = document.getElementById('purchasesTotal');
+            if (!list || !totalEl) return;
+            if (!purchases.length) {
+                list.innerHTML = '<div style="padding:1rem;background:white;border-radius:6px;">No purchases yet.</div>';
+                totalEl.textContent = '$0.00';
+                return;
+            }
+            const html = purchases.map(p => `
+                <div style="display:flex; justify-content:space-between; align-items:center; background:white; padding:0.75rem; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+                    <div>
+                        <div style="font-weight:600; color:var(--secondary-color);">${escapeHtml(p.title)}</div>
+                        <div style="color:#666; font-size:0.9rem;">${escapeHtml(p.author)} • ${new Date(p.date).toLocaleString()}</div>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <div style="font-weight:700; color:var(--secondary-color);">$${(p.price).toFixed(2)}</div>
+                        <button class="btn btn-outline view-receipt-btn" data-tx="${p.txId || p.id}" style="padding:0.35rem 0.6rem; border-radius:4px;">View Receipt</button>
+                    </div>
+                </div>
+            `).join('');
+            list.innerHTML = html;
+            const total = purchases.reduce((s, p) => s + p.price, 0).toFixed(2);
+            totalEl.textContent = '$' + total;
+        }
+
+        purchasesLinkEl?.addEventListener('click', (e) => {
+            e.preventDefault();
+            renderPurchases();
+            purchasesModal.style.display = 'flex';
+        });
+
+        closePurchasesModal.addEventListener('click', () => purchasesModal.style.display = 'none');
+        window.addEventListener('click', (e) => { if (e.target === purchasesModal) purchasesModal.style.display = 'none'; });
+
+        // Receipt modal creation and handlers
+        (function(){
+            let receiptModal = document.getElementById('receiptModal');
+            if (!receiptModal) {
+                receiptModal = document.createElement('div');
+                receiptModal.className = 'modal';
+                receiptModal.id = 'receiptModal';
+                receiptModal.innerHTML = `
+                    <div class="modal-content" style="max-width:640px;">
+                        <span class="close-modal" id="closeReceiptModal">&times;</span>
+                        <div id="receiptBody"></div>
+                    </div>
+                `;
+                document.body.appendChild(receiptModal);
+            }
+
+            function formatCurrency(n) { return '$' + (+n).toFixed(2); }
+            function openReceiptModal(purchase) {
+                const body = document.getElementById('receiptBody');
+                body.innerHTML = `
+                    <div style="display:grid; gap:0.75rem;">
+                        <h3 style="margin:0; color:var(--secondary-color);">Receipt</h3>
+                        <div style="background:#fafafa; padding:0.8rem; border-radius:6px;">
+                            <div style="font-weight:700;">${escapeHtml(purchase.title)}</div>
+                            <div style="color:#666; font-size:0.95rem;">${escapeHtml(purchase.author)}</div>
+                            <div style="margin-top:0.5rem;">Transaction: <strong>${escapeHtml(purchase.txId || purchase.id)}</strong></div>
+                            <div>Date: ${new Date(purchase.date).toLocaleString()}</div>
+                            <div>Paid by: ${escapeHtml(purchase.payer || 'Card ending ' + (purchase.last4 || '****'))}</div>
+                            <div style="margin-top:0.5rem; font-weight:700;">Total: ${formatCurrency(purchase.price)}</div>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
+                            <button id="printReceiptBtn" class="btn btn-outline">Print / Download</button>
+                        </div>
+                    </div>
+                `;
+                receiptModal.style.display = 'flex';
+
+                document.getElementById('printReceiptBtn').onclick = () => {
+                    const w = window.open('', '_blank');
+                    w.document.write(`<!doctype html><html><head><title>Receipt</title><meta charset="utf-8"><style>body{font-family:Segoe UI, Arial, sans-serif;padding:20px;color:#222} .boxed{padding:12px;border:1px solid #ddd;border-radius:6px;}</style></head><body>` + body.innerHTML + `</body></html>`);
+                    w.document.close();
+                    w.focus();
+                    w.print();
+                };
+            }
+
+            document.addEventListener('click', function(e){
+                const btn = e.target.closest && e.target.closest('.view-receipt-btn');
+                if (btn) {
+                    const tx = btn.dataset.tx;
+                    const p = purchases.find(x => (x.txId && x.txId === tx) || String(x.id) === String(tx));
+                    if (p) openReceiptModal(p);
+                }
+                if (e.target.id === 'closeReceiptModal' || e.target.id === 'receiptModal') {
+                    document.getElementById('receiptModal').style.display = 'none';
+                }
+            });
+            // expose globally for other handlers
+            window.openReceiptModal = openReceiptModal;
+        })();
+
+        // Review modal handling
+        (function(){
+            // create review modal elements if not present
+            let reviewModal = document.getElementById('reviewModal');
+            if (!reviewModal) {
+                reviewModal = document.createElement('div');
+                reviewModal.className = 'modal';
+                reviewModal.id = 'reviewModal';
+                reviewModal.innerHTML = `
+                    <div class="modal-content">
+                        <span class="close-modal" id="closeReviewModal">&times;</span>
+                        <h3 class="modal-title" id="reviewModalTitle">Reviews</h3>
+                        <div id="reviewModalBody"></div>
+                    </div>
+                `;
+                document.body.appendChild(reviewModal);
+            }
+
+            function openReviewModal(book) {
+                const title = document.getElementById('reviewModalTitle');
+                const body = document.getElementById('reviewModalBody');
+                title.textContent = `Reviews — ${book.title}`;
+                if (!book.reviews || !book.reviews.length) {
+                    body.innerHTML = '<p>No reviews available for this book.</p>';
+                } else {
+                    body.innerHTML = book.reviews.map(r => `
+                        <div style="margin-bottom:1rem">
+                            <div style="font-weight:600">${escapeHtml(r.reviewer)} <span style="color:#f39c12">${'★'.repeat(Math.round(r.rating))}</span></div>
+                            <div style="margin-top:.35rem;color:#444">${escapeHtml(r.text)}</div>
+                        </div>
+                    `).join('');
+                }
+                reviewModal.style.display = 'flex';
+            }
+
+            // open when clicking a review button
+            document.addEventListener('click', function (e) {
+                const btn = e.target.closest && e.target.closest('.review-btn');
+                if (btn) {
+                    const id = Number(btn.getAttribute('data-id'));
+                    const book = books.find(b => b.id === id);
+                    if (book) openReviewModal(book);
+                }
+            });
+
+            // close handlers
+            document.addEventListener('click', function (e) {
+                if (e.target.id === 'closeReviewModal' || e.target.id === 'reviewModal') {
+                    reviewModal.style.display = 'none';
+                }
+            });
+        })();
+
+    </script>
+</body>
+</html>

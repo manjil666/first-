@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BookHaven</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root{--primary-color:#3498db;--secondary-color:#2c3e50;--accent-color:#e74c3c;--light-color:#ecf0f1;--success-color:#2ecc71}
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}
+        body{background:linear-gradient(180deg,#f5f7fa 0%,#e9eef6 100%);color:#333;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+        .card{background:white;width:100%;max-width:480px;padding:2rem;border-radius:10px;box-shadow:0 10px 30px rgba(46,61,73,0.12)}
+        .brand{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+        .brand i{color:var(--primary-color);font-size:1.6rem}
+        .brand h1{font-size:1.25rem;color:var(--secondary-color)}
+        h2{margin-bottom:0.5rem;color:var(--secondary-color)}
+        p.lead{color:#666;margin-bottom:1.25rem}
+        .form-group{margin-bottom:1rem;position:relative}
+        label{display:block;margin-bottom:.35rem;font-weight:600;color:#444}
+        input{width:100%;padding:.85rem 1rem;border:1px solid #d7e0ea;border-radius:6px;font-size:1rem;transition:border-color .2s}
+        input:focus{outline:none;border-color:var(--primary-color)}
+        .error{color:var(--accent-color);font-size:.9rem;margin-top:.25rem;display:none}
+        .password-strength{height:4px;background:#eee;margin-top:.5rem;border-radius:2px;overflow:hidden}
+        .password-strength-bar{width:0;height:100%;transition:all .3s}
+        .weak{background:var(--accent-color);width:33.33%}
+        .medium{background:#f39c12;width:66.66%}
+        .strong{background:var(--success-color);width:100%}
+        .requirements{font-size:.85rem;color:#666;margin-top:.5rem}
+        .requirement{display:flex;align-items:center;gap:.5rem;margin-top:.25rem}
+        .requirement i{font-size:.75rem}
+        .requirement.met{color:var(--success-color)}
+        .requirement.met i{color:var(--success-color)}
+        .actions{display:flex;align-items:center;justify-content:space-between;margin-top:1.5rem;gap:1rem}
+        .btn{padding:.75rem 1.5rem;border-radius:6px;border:none;cursor:pointer;font-size:1rem;transition:all .2s}
+        .btn-primary{background:var(--primary-color);color:white;flex:1}
+        .btn-primary:hover{background:#2980b9}
+        .btn-primary:disabled{background:#95a5a6;cursor:not-allowed}
+        .back-home{display:block;text-align:center;margin-top:1rem;color:#666;text-decoration:none}
+        .back-home:hover{color:var(--primary-color)}
+    </style>
+</head>
+<body>
+    <div class="card" role="main">
+        <div class="brand">
+            <i class="fas fa-book-open"></i>
+            <h1>BookHaven</h1>
+        </div>
+        <h2>Create your account</h2>
+        <p class="lead">Join our community of book lovers and start exploring.</p>
+
+        <form id="registerForm" novalidate>
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required minlength="2" placeholder="Enter your full name">
+                <div class="error" id="nameError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required placeholder="you@example.com">
+                <div class="error" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="8" placeholder="Choose a strong password">
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="strengthBar"></div>
+                </div>
+                <div class="requirements">
+                    <div class="requirement" id="lengthReq">
+                        <i class="fas fa-circle"></i> At least 8 characters
+                    </div>
+                    <div class="requirement" id="upperReq">
+                        <i class="fas fa-circle"></i> One uppercase letter
+                    </div>
+                    <div class="requirement" id="numberReq">
+                        <i class="fas fa-circle"></i> One number
+                    </div>
+                    <div class="requirement" id="specialReq">
+                        <i class="fas fa-circle"></i> One special character
+                    </div>
+                </div>
+                <div class="error" id="passwordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter your password">
+                <div class="error" id="confirmError"></div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Create Account</button>
+            </div>
+        </form>
+
+        <p style="text-align:center;margin-top:1rem;font-size:.9rem">
+            Already have an account? <a href="login.html" style="color:var(--primary-color);text-decoration:none">Sign in</a>
+        </p>
+        
+        <a href="project.html" class="back-home">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const confirm = document.getElementById('confirmPassword');
+        const submitBtn = document.getElementById('submitBtn');
+        const strengthBar = document.getElementById('strengthBar');
+        
+        // Password requirement checks
+        const requirements = {
+            length: { regex: /.{8,}/, element: document.getElementById('lengthReq') },
+            upper: { regex: /[A-Z]/, element: document.getElementById('upperReq') },
+            number: { regex: /[0-9]/, element: document.getElementById('numberReq') },
+            special: { regex: /[!@#$%^&*]/, element: document.getElementById('specialReq') }
+        };
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function showError(element, message) {
+            const errorDiv = document.getElementById(element + 'Error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError(element) {
+            const errorDiv = document.getElementById(element + 'Error');
+            errorDiv.style.display = 'none';
+        }
+
+        function updatePasswordStrength(pass) {
+            let strength = 0;
+            Object.values(requirements).forEach(req => {
+                if (req.regex.test(pass)) {
+                    req.element.classList.add('met');
+                    strength++;
+                } else {
+                    req.element.classList.remove('met');
+                }
+            });
+
+            strengthBar.className = 'password-strength-bar';
+            if (strength > 3) strengthBar.classList.add('strong');
+            else if (strength > 2) strengthBar.classList.add('medium');
+            else if (strength > 0) strengthBar.classList.add('weak');
+
+            // Enable submit when all requirements are met and passwords match
+            submitBtn.disabled = !(strength === 4 && password.value === confirm.value);
+        }
+
+        // Real-time validation
+        password.addEventListener('input', (e) => {
+            updatePasswordStrength(e.target.value);
+            if (confirm.value) {
+                if (e.target.value !== confirm.value) {
+                    showError('confirm', 'Passwords do not match');
+                } else {
+                    hideError('confirm');
+                }
+            }
+        });
+
+        confirm.addEventListener('input', (e) => {
+            if (e.target.value !== password.value) {
+                showError('confirm', 'Passwords do not match');
+            } else {
+                hideError('confirm');
+                updatePasswordStrength(password.value);
+            }
+        });
+
+        email.addEventListener('input', (e) => {
+            if (e.target.value && !validateEmail(e.target.value)) {
+                showError('email', 'Please enter a valid email address');
+            } else {
+                hideError('email');
+            }
+        });
+
+        name.addEventListener('input', (e) => {
+            if (e.target.value.length < 2) {
+                showError('name', 'Name must be at least 2 characters');
+            } else {
+                hideError('name');
+            }
+        });
+
+        // Form submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let isValid = true;
+
+            // Validate name
+            if (!name.value || name.value.length < 2) {
+                showError('name', 'Please enter your full name (min 2 characters)');
+                isValid = false;
+            }
+
+            // Validate email
+            if (!email.value || !validateEmail(email.value)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+
+            // Validate password
+            let passStrength = 0;
+            Object.values(requirements).forEach(req => {
+                if (req.regex.test(password.value)) passStrength++;
+            });
+            
+            if (passStrength < 4) {
+                showError('password', 'Please meet all password requirements');
+                isValid = false;
+            }
+
+            // Validate password confirmation
+            if (password.value !== confirm.value) {
+                showError('confirm', 'Passwords do not match');
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Simulate successful registration
+                window.location.href = 'project.html?register=success';
+            }
+        });
+    </script>
+</body>
+</html>
